@@ -1,0 +1,22 @@
+{
+"input": {
+"loomfile": "/1TB/Cloud/Lab/Projects/SleepSignature/workflow/results/20201224/scran/y_KCs/y_KCs_grouping-Condition.loom"
+},
+"output": {
+"summary_csv": "/1TB/Cloud/Lab/Projects/SleepSignature/sleep_classifier/results/y_KCs_Run.csv",
+"test_str_txt": "/1TB/Cloud/Lab/Projects/SleepSignature/sleep_classifier/results/y_KCs_Run.txt"
+},
+"params": {
+"target": "Run",
+"model": "/1TB/Cloud/Lab/Projects/SleepSignature/sleep_classifier/results/y_KCs_Run",
+"random_labels": false
+},
+"resources": {
+"_cores": 1,
+"_nodes": 1
+},
+"wildcards": {
+"celltype": "y_KCs",
+"target": "Run"
+}
+}

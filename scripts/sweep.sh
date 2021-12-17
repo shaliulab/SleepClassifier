@@ -1,0 +1,1 @@
+SWEEP_CONFIG=data/sweeps/2021-12-03_sweep.conf; sleep-models-sweep y MLP --h5ad-input data/h5ad/Preloom/KC_mapping-no-zt8-wake_no-rebound.json.h5ad --background data/backgrounds/KC_mapping.csv --seed 10000 --sweeps 100 --sweep-config $SWEEP_CONFIG  --results 2021-12-03_sweep

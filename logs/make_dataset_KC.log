@@ -1,0 +1,18 @@
+08:18:33,474 root INFO Loading anndata to memory
+08:19:04,506 sleep_models.preprocessing INFO n cells = 4170
+08:19:04,506 sleep_models.preprocessing INFO n genes = 1075
+08:19:04,534 sleep_models.preprocessing INFO n cells = 1696
+08:19:04,535 sleep_models.preprocessing INFO n genes = 1075
+08:19:04,552 sleep_models.preprocessing INFO n cells = 4344
+08:19:04,552 sleep_models.preprocessing INFO n genes = 1075
+08:19:18,27 sleep_models.preprocessing INFO Discarding bad genes
+08:19:18,526 sleep_models.preprocessing INFO adata has now 1067 genes
+08:19:18,528 sleep_models.preprocessing INFO Selecting background
+08:19:18,532 sleep_models.preprocessing INFO n cells = 4170
+08:19:18,532 sleep_models.preprocessing INFO n genes = 1067
+08:19:18,553 sleep_models.preprocessing INFO n cells = 1696
+08:19:18,553 sleep_models.preprocessing INFO n genes = 1067
+08:19:18,566 sleep_models.preprocessing INFO n cells = 4344
+08:19:18,567 sleep_models.preprocessing INFO n genes = 1067
+08:19:18,595 sleep_models.preprocessing WARNING 4 cells appear in more than one cluster
+08:19:18,654 sleep_models.preprocessing INFO Saving h5ad to disk at results/KC-data/KC.h5ad

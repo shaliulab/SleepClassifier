@@ -1,0 +1,8 @@
+2021-12-18 08:23:43,876 - train_model - INFO - Training on cell type abp starting!
+2021-12-18 08:23:43,876 - train_model - INFO - Initializing output folder
+2021-12-18 08:23:43,876 - train_model - INFO - Reading results/KC-data/KC-no-marker-genes.h5ad to memory
+2021-12-18 08:23:49,161 - train_model - INFO - Removing genes listed in None
+2021-12-18 08:23:49,178 - train_model - INFO - Initializing model
+2021-12-18 08:23:49,178 - train_model - INFO - Preparing dataset and model for cluster: abp
+2021-12-18 08:23:49,184 - train_model - INFO - Backing up datasets
+2021-12-18 08:23:50,318 - train_model - INFO - Training model

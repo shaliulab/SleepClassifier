@@ -4,3 +4,4 @@ models/
 data_backup/
 sleep_models_backup/
 old/
+.snakemake/

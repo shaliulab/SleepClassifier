@@ -36,6 +36,13 @@ from sleep_models.bin.train_models import train_models
 from sleep_models.bin.crosspredict import predict_sleep 
 from sleep_models.bin.make_matrixplot import make_matrixplot 
 
+
+rule all:
+    input:
+        f"results/{BACKGROUND}-homogenization/",
+        f"results/{BACKGROUND}-models/" + config["model"]
+
+
 rule make_single_cell_dataset:
     input:
         h5ad = "data/h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad",
@@ -51,6 +58,7 @@ rule make_single_cell_dataset:
             output=output.h5ad,
             background=input.background,
             seed=1000,
+            batch_genes_file=config["batch_genes_file"],
             raw=config["raw"],
             logfile=log[0],
             verbose=20,
@@ -70,6 +78,7 @@ rule get_marker_genes:
         h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}.h5ad"
     output:
         directory(f"results/{BACKGROUND}-homogenization/")
+    priority: 1
     log:
         f"logs/get_markers_{BACKGROUND}.log"
     run:
@@ -82,7 +91,7 @@ rule get_marker_genes:
             h5ad=input[0],
             output=output[0],
             thresholds = thresholds,
-            min_clusters = config["min_clusters"][BACKGROUND]
+            max_clusters = config["max_clusters"][BACKGROUND]
         )
 
 
@@ -131,7 +140,7 @@ rule train_models:
             "highly_variable_genes": config["highly_variable_genes"],
             "output" : output[0],
             "model_name": config["model"],
-            "verbose": 20
+            "verbose": 20,
             "seeds": config["seeds"]
         }
         
@@ -142,10 +151,6 @@ rule train_models:
             **kwargs
         )
 
-
-rule all:
-    input: rules.make_single_cell_dataset.input.h5ad
-    output: rules.train_models.output[0]
 
 # rule predict_sleep:
 #     """

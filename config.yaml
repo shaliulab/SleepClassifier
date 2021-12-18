@@ -1,0 +1,27 @@
+background:
+  KC:
+  #glia:
+  #peptides:
+user_defined_log2FC_threshold:
+  KC:
+    2.6
+  glia:
+    6.0
+  peptides:
+    3.0
+log2FC_thresholds:
+  KC:
+    [7.0, 3.0, 2.6, 2.5, 2.0, 1.5, 1.0, 0.5]
+  glia:
+    [7.0, 6.5, 6.0, 5.5]
+max_clusters:
+  KC:
+    3
+  glia:
+    5
+raw: False
+exclude_genes_file: None
+batch_genes_file: "./data/batch_effects.xlsx"
+highly_variable_genes: False
+model: "EBM"
+seeds: [1000, 2000, 3000]

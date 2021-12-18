@@ -1,8 +1,12 @@
+# Which background of cell types to work with
 background:
   KC:
   #glia:
   #peptides:
+
+# Marker gene filtering settings
 user_defined_log2FC_threshold:
+  # genes above this threshold will not be considerd for the analysis
   KC:
     2.6
   glia:
@@ -10,18 +14,41 @@ user_defined_log2FC_threshold:
   peptides:
     3.0
 log2FC_thresholds:
+  # A separate UMAP will be computed on the result of removing genes
+  # with an abs log2FC higher than this
   KC:
     [7.0, 3.0, 2.6, 2.5, 2.0, 1.5, 1.0, 0.5]
   glia:
     [7.0, 6.5, 6.0, 5.5]
 max_clusters:
+  # if a marker is gene is shared by this or more cell types
+  # of the background, it is still considered for the analysis
+  # because it is not a marker anymore within the background
   KC:
     3
   glia:
     5
+
+# Dataset generation settings
 raw: False
 exclude_genes_file: None
 batch_genes_file: "./data/batch_effects.xlsx"
 highly_variable_genes: False
+
+# Model settings
 model: "EBM"
+
+# Reproducibility settigs
 seeds: [1000, 2000, 3000]
+
+# Execution settings
+ncores: 1
+
+# Plotting settings
+plotting_kwargs:
+  barlimits: [0, 100]
+  dpi: 600
+  rotation_x: 80
+  rotation_y: 10
+
+extensions: ["png", "svg"]

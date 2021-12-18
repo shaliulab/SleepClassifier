@@ -29,18 +29,13 @@ config["background"][BACKGROUND] = pd.read_csv(
 
 
 
-from sleep_models.bin.make_dataset import make_dataset
-from sleep_models.bin.get_marker_genes import get_marker_genes 
-from sleep_models.bin.remove_marker_genes import remove_marker_genes 
-from sleep_models.bin.train_models import train_models 
-from sleep_models.bin.crosspredict import predict_sleep 
-from sleep_models.bin.make_matrixplot import make_matrixplot 
-
 
 rule all:
     input:
         f"results/{BACKGROUND}-homogenization/",
-        f"results/{BACKGROUND}-models/" + config["model"]
+        #os.path.join(f"results/{BACKGROUND}-models", config['model']),
+        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"]),
+        expand(os.path.join(f"results/{BACKGROUND}-models", config["model"], "matrixplot.{ext}"), ext=config["extensions"])
 
 
 rule make_single_cell_dataset:
@@ -53,6 +48,8 @@ rule make_single_cell_dataset:
     log:
         f"logs/make_dataset_{BACKGROUND}.log"
     run:
+        from sleep_models.bin.make_dataset import make_dataset
+
         make_dataset(
             h5ad=input.h5ad,
             output=output.h5ad,
@@ -82,6 +79,7 @@ rule get_marker_genes:
     log:
         f"logs/get_markers_{BACKGROUND}.log"
     run:
+        from sleep_models.bin.get_marker_genes import get_marker_genes 
 
         thresholds = config["log2FC_thresholds"][BACKGROUND]
 
@@ -99,7 +97,6 @@ rule remove_marker_genes:
     """
     Remove the passed marker genes from the dataset
     """
-
     input:
         h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}.h5ad"
     output:
@@ -107,6 +104,7 @@ rule remove_marker_genes:
     log:
         f"logs/remove_markers_{BACKGROUND}.log"
     run:
+        from sleep_models.bin.remove_marker_genes import remove_marker_genes 
 
         remove_marker_genes(
             h5ad = input[0],
@@ -124,7 +122,6 @@ rule train_models:
     """
     Train a Sleep Wake classifier on a particular cell type of the background
     """
-
     input:
         h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}-no-marker-genes.h5ad",
         background = f"data/backgrounds/{BACKGROUND}.csv"
@@ -143,25 +140,55 @@ rule train_models:
             "verbose": 20,
             "seeds": config["seeds"]
         }
-        
+
+        from sleep_models.bin.train_models import train_models 
+       
         train_models(
             background = input.background,
             clusters=None, #all
-            ncores=-2,
+            ncores=config["ncores"],
             **kwargs
         )
 
 
-# rule predict_sleep:
-#     """
-#     Given a set of trained models, each on a given cell type,
-#     try performing the same type of prediction
-#     on other cells of this cell type AND also other cell types  
-#     """
-#     pass
+rule predict_sleep:
+    """
+    Given a set of trained models, each on a given cell type,
+    try performing the same type of prediction
+    on other cells of this cell type AND also other cell types  
+    """
+    input:
+        #f"results/{BACKGROUND}-models/" + config['model']
+        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}"), seed=config["seeds"])
+    output:
+        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"])
+    run:
+
+        from sleep_models.bin.crosspredict import predict_sleep 
+
+        predict_sleep(
+            training_output = os.path.dirname(input[0]),
+            ncores = config["ncores"],
+            prediction_output = os.path.dirname(input[0]),
+        )
 
 
-# rule make_matrixplot:
-#      """
-    #    Plot the results of the pipeline
-#      """
+rule make_matrixplot:
+     """
+     Plot the results of the pipeline
+     """
+     input:
+       expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"])
+     output:
+       expand(os.path.join(f"results/{BACKGROUND}-models", config["model"], "matrixplot.{ext}"), ext=config["extensions"])
+     run:
+
+       from sleep_models.bin.make_matrixplot import make_matrixplot_main as make_matrixplot
+
+       plotting_kwargs = config["plotting_kwargs"]
+
+       make_matrixplot(
+           prediction_results = os.path.dirname(os.path.dirname(input[0])),
+           **plotting_kwargs
+       )
+

@@ -34,8 +34,8 @@ rule all:
     input:
         f"results/{BACKGROUND}-homogenization/",
         #os.path.join(f"results/{BACKGROUND}-models", config['model']),
-        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"]),
-        expand(os.path.join(f"results/{BACKGROUND}-models", config["model"], "matrixplot.{ext}"), ext=config["extensions"])
+#        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"]),
+#        expand(os.path.join(f"results/{BACKGROUND}-models", config["model"], "matrixplot.{ext}"), ext=config["extensions"])
 
 
 rule make_single_cell_dataset:

@@ -14,13 +14,16 @@ import sys
 
 import pandas as pd
 
-ROOT_DIR = os.getcwd()
 
 configfile: "config.yaml"
-
 BACKGROUND = list(config["background"].keys())[0]
+LOG_FOLDER = "results/logs"
+INPUT_H5AD = "data/h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad"
 
 
+# write to the config which cell types belong to the
+# background selected
+# this information is available at "data/backgrounds/BACKGROUND.csv
 config["background"][BACKGROUND] = pd.read_csv(
     os.path.join(
         "data", "backgrounds", BACKGROUND + ".csv"
@@ -30,23 +33,26 @@ config["background"][BACKGROUND] = pd.read_csv(
 
 
 
-rule all:
-    input:
-        f"results/{BACKGROUND}-homogenization/",
-        #os.path.join(f"results/{BACKGROUND}-models", config['model']),
-#        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"]),
+#rule homogenize:
+#    input:
+#        f"results/{BACKGROUND}-homogenization/"
+#
+#rule train_and_plot:
+#    input:
+#        #os.path.join(f"results/{BACKGROUND}-models", config['model']),
+##        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"]),
 #        expand(os.path.join(f"results/{BACKGROUND}-models", config["model"], "matrixplot.{ext}"), ext=config["extensions"])
 
 
 rule make_single_cell_dataset:
     input:
-        h5ad = "data/h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad",
+        h5ad = INPUT_H5AD,
         background = f"data/backgrounds/{BACKGROUND}.csv"
     output:
         h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}.h5ad"
     threads: 1
     log:
-        f"logs/make_dataset_{BACKGROUND}.log"
+        f"{LOG_FOLDER}/make_dataset_{BACKGROUND}.log"
     run:
         from sleep_models.bin.make_dataset import make_dataset
 
@@ -77,7 +83,7 @@ rule get_marker_genes:
         directory(f"results/{BACKGROUND}-homogenization/")
     priority: 1
     log:
-        f"logs/get_markers_{BACKGROUND}.log"
+        f"{LOG_FOLDER}/get_markers_{BACKGROUND}.log"
     run:
         from sleep_models.bin.get_marker_genes import get_marker_genes 
 
@@ -102,7 +108,7 @@ rule remove_marker_genes:
     output:
         f"results/{BACKGROUND}-data/{BACKGROUND}-no-marker-genes.h5ad"
     log:
-        f"logs/remove_markers_{BACKGROUND}.log"
+        f"{LOG_FOLDER}/remove_markers_{BACKGROUND}.log"
     run:
         from sleep_models.bin.remove_marker_genes import remove_marker_genes 
 
@@ -123,19 +129,19 @@ rule train_models:
     Train a Sleep Wake classifier on a particular cell type of the background
     """
     input:
-        h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}-no-marker-genes.h5ad",
+        #h5ad = f"results/{BACKGROUND}-data/{BACKGROUND}-no-marker-genes.h5ad",
+        h5ad = rules.remove_marker_genes.output,
         background = f"data/backgrounds/{BACKGROUND}.csv"
     output:
-        directory(f"results/{BACKGROUND}-models/" + config["model"])
+        #directory(f"results/{BACKGROUND}-models/" + config["model"]),
+        directory(expand(f"results/{BACKGROUND}-models/" + config["model"] + "/random-state_{seed}", seed=config["seeds"]))
     log:
-       f"logs/train_models_{BACKGROUND}.log"
+       f"{LOG_FOLDER}/train_models_{BACKGROUND}.log"
     run:
 
         kwargs = {
-            "h5ad_input": input.h5ad,
             "exclude_genes_file":  config["exclude_genes_file"],
             "highly_variable_genes": config["highly_variable_genes"],
-            "output" : output[0],
             "model_name": config["model"],
             "verbose": 20,
             "seeds": config["seeds"]
@@ -144,6 +150,8 @@ rule train_models:
         from sleep_models.bin.train_models import train_models 
        
         train_models(
+            h5ad_input = input.h5ad[0],
+            output = os.path.dirname(output[0]),
             background = input.background,
             clusters=None, #all
             ncores=config["ncores"],
@@ -159,9 +167,10 @@ rule predict_sleep:
     """
     input:
         #f"results/{BACKGROUND}-models/" + config['model']
-        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}"), seed=config["seeds"])
-    output:
-        expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"])
+        rules.train_models.output
+        #expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}"), seed=config["seeds"])
+    #output:
+        #expand(os.path.join(f"results/{BACKGROUND}-models", config['model'], "random-state_{seed}", "accuracy.csv"), seed=config["seeds"])
     run:
 
         from sleep_models.bin.crosspredict import predict_sleep 

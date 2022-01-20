@@ -19,7 +19,7 @@ log2FC_thresholds:
   KC:
     [7.0, 3.0, 2.6, 2.5, 2.0, 1.5, 1.0, 0.5]
   glia:
-    [7.0, 6.5, 6.0, 5.5]
+    [7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0]
 max_clusters:
   # if a marker is gene is shared by this or more cell types
   # of the background, it is still considered for the analysis
@@ -42,13 +42,12 @@ model: "EBM"
 seeds: [1000, 2000, 3000]
 
 # Execution settings
-ncores: 1
+ncores: -2
 
 # Plotting settings
 plotting_kwargs:
   barlimits: [0, 100]
   dpi: 600
-  rotation_x: 80
-  rotation_y: 10
+  rotation: [90, 0]
 
 extensions: ["png", "svg"]

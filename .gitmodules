@@ -1,9 +1,0 @@
-[submodule "sleepml-notebooks"]
-	path = scripts/sleepml-notebooks
-	url = git@github.com:antortjim/sleepml-notebooks
-[submodule "data"]
-	path = data
-	url = git@github.com:shaliulab/sleepml-data
-[submodule "sleep-models"]
-	path = src/sleep-models
-	url = git@github.com:shaliulab/sleep-models

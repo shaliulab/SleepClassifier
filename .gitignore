@@ -1,7 +1,10 @@
 results/
-models/
-.ipynb_checkpoints/
-data_backup/
-sleep_models_backup/
+__pycache__/
+data/h5ad/
+wandb/
 old/
-.snakemake/
+.ipynb_checkpoints/
+results_test/
+logs/
+presentations/
+docs/

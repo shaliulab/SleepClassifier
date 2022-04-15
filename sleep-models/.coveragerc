@@ -1,7 +1,0 @@
-[run]
-source =
-    tests/*
-omit = 
-    tests/old/*
-    tests/scripts/*
-

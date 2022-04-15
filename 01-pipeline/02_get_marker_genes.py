@@ -20,11 +20,13 @@ for background in backgrounds:
     max_clusters_per_marker = config["max_clusters"][background]
     thresholds = config["log2FC_thresholds"][background]
 
-    get_marker_genes(
-        h5ad_input=os.path.join(DATA_DIR, f"h5ad/{background}.h5ad"),
-        output=os.path.join(RESULTS_DIR, f"{background}_get-marker-genes/"),
-        max_clusters=max_clusters_per_marker,
-        thresholds=thresholds,
-        ncores=1,
-        cache=cache,
-    )
+    for algorithm in config["DR_algorithm"]:
+        get_marker_genes(
+            h5ad_input=os.path.join(DATA_DIR, f"h5ad/{background}.h5ad"),
+            output=os.path.join(RESULTS_DIR, f"{background}_get-marker-genes/"),
+            max_clusters=max_clusters_per_marker,
+            thresholds=thresholds,
+            ncores=1,
+            cache=cache,
+            algorithm=algorithm,
+        )

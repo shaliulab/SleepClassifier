@@ -55,3 +55,4 @@ cache: False
 data_dir: "data/"
 results_dir: "updated_packages_results/"
 template: "simple_condition_mapping.yaml"
+DR_algorithm: ["tSNE", "UMAP"]

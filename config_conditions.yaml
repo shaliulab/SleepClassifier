@@ -57,7 +57,8 @@ plotting_kwargs:
 
 extensions: ["png", "svg"]
 cache: False
-data_dir: "data_conditions/"
+data_dir: "data/"
+temp_data_dir: "data_conditions/"
 results_dir: "results_conditions/"
 template: "simple_condition_mapping.yaml"
-DR_algorithm: ["TruncatedSVD", "UMAP"]
+DR_algorithm: ["TruncatedSVD"]

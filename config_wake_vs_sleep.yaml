@@ -61,4 +61,4 @@ data_dir: "data/"
 temp_data_dir: "data_wake_vs_sleep/"
 results_dir: "results_wake_vs_sleep/"
 template: None
-DR_algorithm: ["TruncatedSVD", "UMAP"]
+DR_algorithm: ["TruncatedSVD"]

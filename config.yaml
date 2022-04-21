@@ -2,7 +2,6 @@
 background:
   KC:
   glia:
-  #peptides:
 
 # Marker gene filtering settings
 user_defined_log2FC_threshold:
@@ -32,8 +31,9 @@ max_clusters:
 # Dataset generation settings
 raw: False
 exclude_genes_file: None
-batch_genes_file: "./data/batch_effects.xlsx"
+batch_genes_file: "batch_effects.xlsx"
 highly_variable_genes: False
+h5ad_input: "h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad"
 
 # Model settings
 arch: ["EBM"]

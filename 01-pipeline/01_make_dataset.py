@@ -7,22 +7,22 @@ import os.path
 from sleep_models.bin.make_dataset import make_dataset
 
 SHUFFLES=0
-H5AD_INPUT="data/h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad"
 
 with open("config.yaml", "r") as filehandle:
     config = yaml.load(filehandle, yaml.SafeLoader)
 
-backgrounds = config["background"]
 DATA_DIR = config["data_dir"]
+TEMP_DATA_DIR = config["temp_data_dir"]
+H5AD_INPUT = config["h5ad_input"]
 
-for background in backgrounds:
+for background in config["background"]:
     ## for KC
     make_dataset(
-        h5ad_input=H5AD_INPUT,
-        h5ad_output=os.path.join(DATA_DIR, "h5ad", f"{background}.h5ad"),
+        h5ad_input=os.path.join(DATA_DIR, H5AD_INPUT),
+        h5ad_output=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad"),
         random_state=1500,
         background=os.path.join(DATA_DIR, "backgrounds", f"{background}.csv"),
-        batch_genes_file=os.path.join(DATA_DIR, "batch_effects.xlsx"),
+        batch_genes_file=os.path.join(DATA_DIR, config["batch_genes_file"]),
         shuffles=SHUFFLES,
-        raw=False,
+        raw=config["raw"],
     )

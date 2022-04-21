@@ -10,19 +10,17 @@ from sleep_models.bin.get_marker_genes import get_marker_genes
 with open("config.yaml", "r") as filehandle:
     config = yaml.load(filehandle, yaml.SafeLoader)
 
-backgrounds = config["background"]
-DATA_DIR = config["data_dir"]
 RESULTS_DIR = config["results_dir"]
 cache = config["cache"]
+TEMP_DATA_DIR = config["temp_data_dir"]
 
-for background in backgrounds:
-    print(background)
+for background in config["background"]:
     max_clusters_per_marker = config["max_clusters"][background]
     thresholds = config["log2FC_thresholds"][background]
 
     for algorithm in config["DR_algorithm"]:
         get_marker_genes(
-            h5ad_input=os.path.join(DATA_DIR, f"h5ad/{background}.h5ad"),
+            h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}.h5ad"),
             output=os.path.join(RESULTS_DIR, f"{background}_get-marker-genes/"),
             max_clusters=max_clusters_per_marker,
             thresholds=thresholds,

@@ -6,7 +6,7 @@ from sleep_models.bin.remove_marker_genes import remove_marker_genes
 with open("config.yaml", "r") as filehandle:
     config = yaml.load(filehandle, yaml.SafeLoader)
 
-DATA_DIR = config["data_dir"]
+TEMP_DATA_DIR = config["temp_data_dir"]
 RESULTS_DIR = config["results_dir"]
 
 for background in config["background"]:
@@ -20,7 +20,7 @@ for background in config["background"]:
         "marker_genes.txt"
     )
     remove_marker_genes(
-        h5ad_input=os.path.join(DATA_DIR, f"h5ad/{background}.h5ad"),
-        h5ad_output=os.path.join(DATA_DIR, f"h5ad/{background}-no-marker-genes.h5ad"),
+        h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}.h5ad"),
+        h5ad_output=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}-no-marker-genes.h5ad"),
         marker_gene_file=marker_gene_file,
     )

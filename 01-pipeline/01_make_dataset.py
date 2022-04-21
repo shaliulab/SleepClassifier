@@ -15,6 +15,11 @@ DATA_DIR = config["data_dir"]
 TEMP_DATA_DIR = config["temp_data_dir"]
 H5AD_INPUT = config["h5ad_input"]
 
+os.makedirs(
+    os.path.join(TEMP_DATA_DIR, 'h5ad'),
+    exist_ok=True
+)
+
 for background in config["background"]:
     ## for KC
     make_dataset(

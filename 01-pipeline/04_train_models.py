@@ -15,7 +15,7 @@ DATA_DIR = config["data_dir"]
 RESULTS_DIR = config["results_dir"]
 CONDITION_TEMPLATE = config["template"]
 
-if CONDITION_TEMPLATE is None:
+if CONDITION_TEMPLATE == "None":
     label_mapping=None
 else:
     label_mapping=os.path.join(DATA_DIR, "templates", CONDITION_TEMPLATE)

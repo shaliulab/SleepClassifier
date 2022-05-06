@@ -13,6 +13,7 @@ with open("config.yaml", "r") as filehandle:
 RESULTS_DIR = config["results_dir"]
 cache = config["cache"]
 TEMP_DATA_DIR = config["temp_data_dir"]
+DATA_DIR = config["data_dir"]
 
 for background in config["background"]:
     max_clusters_per_marker = config["max_clusters"][background]
@@ -21,6 +22,7 @@ for background in config["background"]:
     for algorithm in config["DR_algorithm"]:
         get_marker_genes(
             h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}.h5ad"),
+            marker_database=os.path.join(DATA_DIR, config["marker_database"]),
             output=os.path.join(RESULTS_DIR, f"{background}_get-marker-genes/"),
             max_clusters=max_clusters_per_marker,
             thresholds=thresholds,

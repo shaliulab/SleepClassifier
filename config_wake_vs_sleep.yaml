@@ -58,6 +58,7 @@ plotting_kwargs:
 extensions: ["png", "svg"]
 cache: False
 data_dir: "data/"
+marker_database: "markers/"
 temp_data_dir: "2022-05-06_data_wake_vs_sleep/"
 results_dir: "2022-05-06_results_wake_vs_sleep/"
 template: None

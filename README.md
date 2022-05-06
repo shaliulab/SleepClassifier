@@ -1,5 +1,13 @@
 Sleep models pipeline
 
+Requirements:
+===================
+
+
+`sleep-models==1.1.1`
+
+Instructions
+==========================
 
 This pipeline has 5 steps:
 
@@ -14,3 +22,4 @@ in the background become as homogeneous as possible. A Dimensionality Reduction 
 4: train_models: have one or more of the supported models train using the transcriptomic data to predict sleep and wake
 
 5: predict: predict the sleep / wake status of a cell from the same cell type, or a different one
+

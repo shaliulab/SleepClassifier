@@ -16,9 +16,9 @@ log2FC_thresholds:
   # A separate UMAP will be computed on the result of removing genes
   # with an abs log2FC higher than this
   KC:
-    [7.0, 3.0, 2.6, 2.5, 2.0, 1.5, 1.0, 0.5]
+    [8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.5, 2.0, 1.5, 1.0, 0.5, 0.0]
   glia:
-    [10.0, 9.0, 8.0, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0]
+    [9.99, 9.0, 8.0, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0, 0.5, 0.0]
 max_clusters:
   # if a marker is gene is shared by this or more cell types
   # of the background, it is still considered for the analysis
@@ -29,14 +29,14 @@ max_clusters:
     5
 
 # Dataset generation settings
-raw: False
+raw: True 
 exclude_genes_file: None
 batch_genes_file: "batch_effects.xlsx"
 highly_variable_genes: False
 h5ad_input: "h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad"
 
 # Model settings
-arch: ["NeuralNetwork"] # this is the selected model in this run.
+arch: ["EBM", "RF", "NeuralNetwork"] # this is the selected model in this run.
 # Implemented models:
 #    * EBM
 #    * Neural Network
@@ -44,7 +44,7 @@ arch: ["NeuralNetwork"] # this is the selected model in this run.
 #    * RF ?
 
 # Reproducibility settigs
-seeds: [1000, 2000, 3000]
+seeds: [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 # Execution settings
 ncores: -2
@@ -58,7 +58,10 @@ plotting_kwargs:
 extensions: ["png", "svg"]
 cache: False
 data_dir: "data/"
-temp_data_dir: "data_conditions/"
-results_dir: "results_conditions/"
+temp_data_dir: "2022-04-30_data_conditions/"
+results_dir: "2022-04-30_results_conditions/"
 template: "simple_condition_mapping.yaml"
-DR_algorithm: ["TruncatedSVD"]
+DR_algorithm: ["TruncatedSVD", "UMAP", "TSNE"]
+target: ["Condition"]
+shuffles: 1
+pinned_columns: ["Treatment", "Condition"]

@@ -11,13 +11,14 @@ with open("config.yaml", "r") as filehandle:
 DATA_DIR = config["data_dir"]
 RESULTS_DIR = config["results_dir"]
 
-for background in config["background"]:
+def predict(background_folder, architectures, random_states, **kwargs):
+    for arch in architectures:
+            
+        arch_folder = os.path.join(background_folder, arch)
 
-    for arch in config["arch"]:
+        for random_state in random_states:
 
-        for random_state in [1000, 2000, 3000]:
-
-            replicate_folder=os.path.join(RESULTS_DIR, f"{background}-train", arch, f"random-state_{random_state}")
+            replicate_folder=os.path.join(arch_folder, f"random-state_{random_state}")
 
             if not os.path.exists(replicate_folder):
                 raise Exception(f"Please make sure {replicate_folder} exists")
@@ -39,5 +40,20 @@ for background in config["background"]:
         make_matrixplot(
             prediction_results=os.path.dirname(
                 replicate_folder
-            )
+            ),
+            **kwargs
         )
+
+for background in config["background"]:
+    
+    background_folder = os.path.join(RESULTS_DIR, f"{background}-train")
+    predict(background_folder, config["arch"], config["seeds"], **config["plotting_kwargs"])
+   
+    for i in range(config["shuffles"]):
+        background_folder = os.path.join(RESULTS_DIR, f"{background}_shuffled_{i}-train")
+        predict(background_folder, config["arch"], config["seeds"], **config["plotting_kwargs"])
+
+
+
+
+    

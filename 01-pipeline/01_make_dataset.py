@@ -6,7 +6,6 @@ import yaml
 import os.path
 from sleep_models.bin.make_dataset import make_dataset
 
-SHUFFLES=0
 
 with open("config.yaml", "r") as filehandle:
     config = yaml.load(filehandle, yaml.SafeLoader)
@@ -14,6 +13,7 @@ with open("config.yaml", "r") as filehandle:
 DATA_DIR = config["data_dir"]
 TEMP_DATA_DIR = config["temp_data_dir"]
 H5AD_INPUT = config["h5ad_input"]
+SHUFFLES = config["shuffles"]
 
 os.makedirs(
     os.path.join(TEMP_DATA_DIR, 'h5ad'),
@@ -30,4 +30,5 @@ for background in config["background"]:
         batch_genes_file=os.path.join(DATA_DIR, config["batch_genes_file"]),
         shuffles=SHUFFLES,
         raw=config["raw"],
+        pinned_columns=config["pinned_columns"]
     )

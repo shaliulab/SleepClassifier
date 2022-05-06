@@ -14,6 +14,8 @@ TEMP_DATA_DIR = config["temp_data_dir"]
 DATA_DIR = config["data_dir"]
 RESULTS_DIR = config["results_dir"]
 CONDITION_TEMPLATE = config["template"]
+TARGET = config["target"]
+SECONDARY_TARGET = config.get("secondary_target", None)
 
 if CONDITION_TEMPLATE == "None":
     label_mapping=None
@@ -31,15 +33,42 @@ def get_celltypes(background):
 
 for background in config["background"]:
     for arch in config["arch"]:
-        for seed in [1000, 2000, 3000]:
+        for seed in config["seeds"]:
             celltypes = get_celltypes(background)
             for celltype in celltypes:
+                if SECONDARY_TARGET is None:
+                    train(
+                        h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}-no-marker-genes.h5ad"),
+                        arch=arch,
+                        cluster=celltype,
+                        output=os.path.join(RESULTS_DIR, f"{background}-train"),
+                        random_state=seed,
+                        highly_variable_genes=config["highly_variable_genes"], # used to be True always
+                        label_mapping=label_mapping,
+                        target=TARGET,
+                    )
+
+
+                    for i in range(config["shuffles"]):
+                        train(
+                            h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}_shuffled_{i}-no-marker-genes.h5ad"),
+                            arch=arch,
+                            cluster=celltype,
+                            output=os.path.join(RESULTS_DIR, f"{background}_shuffled_{i}-train"),
+                            random_state=seed,
+                            highly_variable_genes=config["highly_variable_genes"], # used to be True always
+                            label_mapping=label_mapping,
+                            target=TARGET,
+                        )
+
+            if SECONDARY_TARGET is not None:
                 train(
                     h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}-no-marker-genes.h5ad"),
                     arch=arch,
-                    cluster=celltype,
-                    output=os.path.join(RESULTS_DIR, f"{background}-train"),
+                    cluster=None,
+                    output=os.path.join(RESULTS_DIR, SECONDARY_TARGET, f"{background}-train"),
                     random_state=seed,
                     highly_variable_genes=config["highly_variable_genes"], # used to be True always
                     label_mapping=label_mapping,
+                    target=SECONDARY_TARGET,
                 )

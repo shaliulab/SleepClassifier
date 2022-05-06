@@ -24,3 +24,10 @@ for background in config["background"]:
         h5ad_output=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}-no-marker-genes.h5ad"),
         marker_gene_file=marker_gene_file,
     )
+
+    for i in range(config["shuffles"]):
+        remove_marker_genes(
+            h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}_shuffled_{i}.h5ad"),
+            h5ad_output=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}_shuffled_{i}-no-marker-genes.h5ad"),
+            marker_gene_file=marker_gene_file,
+        )

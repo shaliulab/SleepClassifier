@@ -28,3 +28,13 @@ for background in config["background"]:
             cache=cache,
             algorithm=algorithm,
         )
+        # for i in range(config["shuffles"]):
+        #     get_marker_genes(
+        #         h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}_shuffled_{i}.h5ad"),
+        #         output=os.path.join(RESULTS_DIR, f"{background}_shuffled_{i}_get-marker-genes/"),
+        #         max_clusters=max_clusters_per_marker,
+        #         thresholds=thresholds,
+        #         ncores=1,
+        #         cache=cache,
+        #         algorithm=algorithm,
+        #     )

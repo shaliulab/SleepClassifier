@@ -19,7 +19,7 @@ def get_celltypes(background):
     return pd.read_csv(
         os.path.join(
             DATA_DIR, "backgrounds", f"{background}.csv"
-        )
+        ), index_col=0, comment="#"
     )["cluster"].tolist()
 
 for background in config["background"]:

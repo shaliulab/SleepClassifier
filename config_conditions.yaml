@@ -9,7 +9,7 @@ user_defined_log2FC_threshold:
   KC:
     1.0
   glia:
-    6.0
+    1.0
   peptides:
     3.0
 log2FC_thresholds:
@@ -44,22 +44,23 @@ arch: ["EBM", "RF", "NeuralNetwork"] # this is the selected model in this run.
 #    * RF ?
 
 # Reproducibility settigs
-seeds: [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+seeds: [1000, 2000, 3000, 4000]
 
 # Execution settings
 ncores: -2
 
 # Plotting settings
 plotting_kwargs:
-  barlimits: [0, 100]
+  barlimits: [50, 75]
   dpi: 600
   rotation: [90, 0]
 
 extensions: ["png", "svg"]
 cache: False
 data_dir: "data/"
-temp_data_dir: "2022-04-30_data_conditions/"
-results_dir: "2022-04-30_results_conditions/"
+marker_database: "markers/"
+temp_data_dir: "2022-05-05_data_conditions/"
+results_dir: "2022--05-05_results_conditions/"
 template: "simple_condition_mapping.yaml"
 DR_algorithm: ["TruncatedSVD", "UMAP", "TSNE"]
 target: ["Condition"]

@@ -1,10 +1,8 @@
 import os.path
-import yaml
-
 from sleep_models.bin.remove_marker_genes import remove_marker_genes
+from sleep_models.utils.utils import load_pipeline_config, save_pipeline_config
 
-with open("config.yaml", "r") as filehandle:
-    config = yaml.load(filehandle, yaml.SafeLoader)
+config = load_pipeline_config()
 
 TEMP_DATA_DIR = config["temp_data_dir"]
 RESULTS_DIR = config["results_dir"]
@@ -19,11 +17,14 @@ for background in config["background"]:
         f"threshold-{threshold}",
         "marker_genes.txt"
     )
+
+    CONFIG_DOCUMENTATION = os.path.join(TEMP_DATA_DIR, "03_remove_marker_genes.yml")
     remove_marker_genes(
         h5ad_input=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}.h5ad"),
         h5ad_output=os.path.join(TEMP_DATA_DIR, f"h5ad/{background}-no-marker-genes.h5ad"),
         marker_gene_file=marker_gene_file,
     )
+    save_pipeline_config(config, dest=CONFIG_DOCUMENTATION)
 
     for i in range(config["shuffles"]):
         remove_marker_genes(

@@ -23,3 +23,6 @@ in the background become as homogeneous as possible. A Dimensionality Reduction 
 
 5: predict: predict the sleep / wake status of a cell from the same cell type, or a different one
 
+
+
+config -> config_wake_vs_sleep.yaml

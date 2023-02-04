@@ -1,6 +1,6 @@
 [submodule "sleep-models"]
 	path = sleep-models
 	url = git@github.com:shaliulab/sleep-models
-[submodule "sleepml-data"]
+[submodule "data"]
 	path = data
 	url = git@github.com:shaliulab/sleepml-data

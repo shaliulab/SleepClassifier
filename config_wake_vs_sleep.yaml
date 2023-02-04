@@ -1,69 +1,112 @@
-# Which background of cell types to work with
+DR_algorithm:
+- TruncatedSVD
+- UMAP
+- TSNE
+arch:
+- EBM
+- RF
+  #- EBMRegressor
 background:
   KC:
   glia:
-
-# Marker gene filtering settings
-user_defined_log2FC_threshold:
-  # genes above this threshold will not be considerd for the analysis
-  KC:
-    1.0
-  glia:
-    1.0
-  peptides:
-    3.0
+batch_genes_file: batch_effects.xlsx
+cache: false
+data_dir: data/
+exclude_genes_file: null
+extensions:
+- png
+- svg
+h5ad_input: h5ad/Preloom/adata_08082022.h5ad
+highly_variable_genes: true
+raw: true
+train_models_input: "-no-marker-genes"
 log2FC_thresholds:
-  # A separate UMAP will be computed on the result of removing genes
-  # with an abs log2FC higher than this
   KC:
-    [8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.5, 2.0, 1.5, 1.0, 0.5, 0.0]
+  - 8.0
+  - 7.0
+  - 6.0
+  - 5.0
+  - 4.0
+  - 3.0
+  - 2.5
+  - 2.0
+  - 1.5
+  - 1.0
+  - 0.5
+  - 0.0
   glia:
-    [9.99, 9.0, 8.0, 7.0, 6.5, 6.0, 5.5, 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 1.5, 1.0, 0.5, 0.0]
+  - 9.99
+  - 9.0
+  - 8.0
+  - 7.0
+  - 6.5
+  - 6.0
+  - 5.5
+  - 5.0
+  - 4.5
+  - 4.0
+  - 3.5 
+  - 3.0
+  - 2.5
+  - 2.0
+  - 1.5
+  - 1.0
+  - 0.5
+  - 0.0
+marker_database: markers/
 max_clusters:
-  # if a marker is gene is shared by this or more cell types
-  # of the background, it is still considered for the analysis
-  # because it is not a marker anymore within the background
-  KC:
-    5
-  glia:
-    10
-
-# Dataset generation settings
-raw: True
-exclude_genes_file: None
-batch_genes_file: "batch_effects.xlsx"
-highly_variable_genes: False
-h5ad_input: "h5ad/Preloom/All_Combined_No_ZT2_Wake.h5ad"
-
-# Model settings
-arch: ["EBM", "RF", "NeuralNetwork"] # this is the selected model in this run.
-#arch: ["NeuralNetwork"] # this is the selected model in this run.
-# Implemented models:
-#    * EBM
-#    * Neural Network
-#    * KNN ?
-#    * RF ?
-
-# Reproducibility settigs
-seeds: [1000, 2000, 3000, 4000]
-# Execution settings
+  KC: 5
+  glia: 10
 ncores: -2
-
-# Plotting settings
+pinned_columns:
+- CellType
+barlimits:
+  KC:
+    #    - 48
+    #    - 66
+    - 58
+    - 65
+  glia:
+    #    - 48
+    #    - 75
+    - 50
+    - 70
 plotting_kwargs:
-  barlimits: [50, 75]
-  dpi: 600
-  rotation: [90, 0]
-
-extensions: ["png", "svg"]
-cache: False
-data_dir: "data/"
-marker_database: "markers/"
-temp_data_dir: "2022-05-06_data_wake_vs_sleep/"
-results_dir: "2022-05-06_results_wake_vs_sleep/"
-template: None
-DR_algorithm: ["TruncatedSVD", "UMAP", "TSNE"]
-target: "Treatment"
-# secondary_target: "CellType"
+  dpi: 72
+  rotation:
+  - 90
+  - 0
+  palette:  YlGnBu_r
+  #results_dir: 2022-08-04_results_wake_vs_sleep
+results_dir: 2022-09-15_results_wake_vs_sleep_copy
+#temp_data_dir: 2022-08-04_data_wake_vs_sleep
+temp_data_dir: 2022-07-23_data_wake_vs_sleep
+seeds:
+- 1000
+- 2000
+- 3000
+- 4000
 shuffles: 1
-pinned_columns: ["Treatment", "Condition"]
+# target: Template
+target: Treatment
+template: null # not done
+# template: zt20_sleep-vs-zt20_sd_zt8_wake_zt8_wake_stimulation.json # not done
+# template: zt20_sleep-vs-zt20_sd_zt8_wake.json # not done
+# template: zt20_sleep-vs-zt20_sd.json # done
+template_from_beginning: False
+user_defined_log2FC_threshold:
+  KC: 2.0
+  glia: 3.5
+secondary_target: [CellType, Run]
+celltype: Cluster_ID_res8
+#celltype: Cluster_ID_res8
+predict: False
+metrics:
+- "recall"
+- "specificity"
+- "accuracy"
+- "f_sleep"
+- "expected_accuracy"
+- "trivial_accuracy"
+save_results: True
+feature_selection_file: null

@@ -109,4 +109,3 @@ metrics:
 - "expected_accuracy"
 - "trivial_accuracy"
 save_results: True
-feature_selection_file: null

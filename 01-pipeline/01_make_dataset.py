@@ -22,9 +22,6 @@ RAW=config["raw"]
 HIGHLY_VARIABLE_GENES=config["highly_variable_genes"]
 TEMPLATE_FILE=config["template"]
 TEMPLATE_FILE=config["template"]
-FEATURE_SELECTION_FILE=config.get("feature_selection_file", None)
-if FEATURE_SELECTION_FILE is not None:
-    FEATURE_SELECTION_FILE=os.path.join(DATA_DIR, FEATURE_SELECTION_FILE)
 
 
 if TEMPLATE_FILE is None or not config["template_from_beginning"]:
@@ -51,7 +48,6 @@ for background in config["background"]:
         random_state=1500,
         background=os.path.join(DATA_DIR, "backgrounds", f"{background}.csv"),
         batch_genes_file=os.path.join(DATA_DIR, config["batch_genes_file"]),
-        feature_selection_file=FEATURE_SELECTION_FILE,
         shuffles=SHUFFLES,
         raw=RAW,
         highly_variable_genes=HIGHLY_VARIABLE_GENES,

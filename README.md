@@ -27,15 +27,15 @@ Settings are read from the configuration file `config.yaml`:
 
 ### Parameters used:
 
-    `**data_dir**`
-    `**background**`
-    `**temp_data_dir**`
-    `**h5ad_input**`
-    `**shuffles**`
-    `**pinned_columns**`
-    `**raw**`
-    `**highly_variable_genes**`
-    `**template**`
+    **data_dir**
+    **background**
+    **temp_data_dir**
+    **h5ad_input**
+    **shuffles**
+    **pinned_columns**
+    **raw**
+    **highly_variable_genes**
+    **template**
 
 
 ### Description

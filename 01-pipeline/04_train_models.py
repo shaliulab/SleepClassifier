@@ -21,7 +21,6 @@ TARGET = config["target"]
 SECONDARY_TARGET = config["secondary_target"]
 N_JOBS=1
 train_models_input = config["train_models_input"]
-ALLOW_WITH_MARKERS=config.get("allow_with_markers", False)
 STRATIFY=config.get("stratify", True)
 
 
@@ -41,86 +40,60 @@ def get_celltypes(background):
     ).index.tolist()
 
 
+
+def train_step(arch, celltype, background, seed, secondary_target=None, shuffle=-1):
+
+    if secondary_target:
+        output = os.path.join(RESULTS_DIR, secondary_target, f"{background}-train")
+        CONFIG_DOCUMENTATION = os.path.join(output, "04_train_models_secondary-target.yml")
+        
+    else:
+        output = os.path.join(RESULTS_DIR, f"{background}-train")
+        CONFIG_DOCUMENTATION = os.path.join(output, "04_train_models.yml")
+
+    if shuffle>=0:
+        h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}_shuffled_{shuffle}{train_models_input}.h5ad")
+    else:
+        h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}{train_models_input}.h5ad")
+
+    print(f"Reading {h5ad_input}")
+
+
+    train(
+        h5ad_input=h5ad_input,
+        arch=arch,
+        output=output,
+        cluster=celltype,
+        random_state=seed,
+        template_file=template_file,
+        target=TARGET,
+        stratify=STRATIFY,
+    )
+    save_pipeline_config(config, dest=CONFIG_DOCUMENTATION)
+    
 def train_loop(background, arch, seed):
+
     celltypes = get_celltypes(background)
     for celltype in celltypes:
-        output=os.path.join(RESULTS_DIR, f"{background}-train")
+        # Step 1: Train a model that will learn the mapping between transcriptome and some annotation stored in TARGET
+        train_step(arch, celltype, background, seed, secondary_target=None, shuffle=-1)
 
-        CONFIG_DOCUMENTATION = os.path.join(output, "04_train_models.yml")
-        h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}{train_models_input}.h5ad")
-        if ALLOW_WITH_MARKERS and not os.path.exists(h5ad_input):
-            h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad")
-        print(f"Reading {h5ad_input}")
-
-        train(
-            h5ad_input=h5ad_input,
-            arch=arch,
-            output=output,
-            cluster=celltype,
-            random_state=seed,
-            template_file=template_file,
-            target=TARGET,
-            stratify=STRATIFY,
-        )
-        save_pipeline_config(config, dest=CONFIG_DOCUMENTATION)
-
-
+        # Step 2: Same as 1, but now on every shuffled dataset (where the link should be broken)
+        # We use this step to estimate a lower bound of the success metrics to be expected if there was no signal
         for i in range(config["shuffles"]):
-            h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}_shuffled_{i}{train_models_input}.h5ad")
-            if ALLOW_WITH_MARKERS and not os.path.exists(h5ad_input):
-                h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad")
-
-            print(f"Reading {h5ad_input}")
-            train(
-                h5ad_input=h5ad_input,
-                arch=arch,
-                cluster=celltype,
-                output=os.path.join(RESULTS_DIR, f"{background}_shuffled_{i}-train"),
-                random_state=seed,
-                template_file=template_file,
-                target=TARGET,
-                stratify=STRATIFY,
-            )
+            train_step(arch, celltype, background, seed, secondary_target=None, shuffle=i)
 
     if SECONDARY_TARGET is not None:
+        # Step 3. Same as 1, but now on the secondary target instea of TARGET
+        # A secondary target is typically an annotation of the cells that is not biologically relevant
+        # but still could be predictable from the data, typically batch related
         for target in SECONDARY_TARGET:
-            output = os.path.join(RESULTS_DIR, target, f"{background}-train")
-            CONFIG_DOCUMENTATION = os.path.join(output, "04_train_models_secondary-target.yml")
-            h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}{train_models_input}.h5ad")
-            if ALLOW_WITH_MARKERS and not os.path.exists(h5ad_input):
-                h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad")
-
-            print(f"Reading {h5ad_input}")
-            train(
-                h5ad_input=h5ad_input,
-                arch=arch,
-                cluster=None,
-                output=output,
-                random_state=seed,
-                template_file=template_file,
-                target=target,
-                stratify=STRATIFY,
-            )
+            train_step(arch, celltype, background, seed, secondary_target=SECONDARY_TARGET, shuffle=-1)
+            
+            # Step 4: Same as 3, but on the shuffled dataset, where again the link should be broken
             for i in range(config["shuffles"]):
-                h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}_shuffled_{i}{train_models_input}.h5ad")
-                if ALLOW_WITH_MARKERS and not os.path.exists(h5ad_input):
-                    h5ad_input=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad")
-
-
-                print(f"Reading {h5ad_input}")
-                train(
-                    h5ad_input=h5ad_input,
-                    arch=arch,
-                    cluster=None,
-                    output = os.path.join(RESULTS_DIR, target, f"{background}_shuffled_{i}-train"),
-                    random_state=seed,
-                    template_file=template_file,
-                    target=target,
-                    shuffle=i,
-                   stratify=STRATIFY,
-                )                
-            save_pipeline_config(config, dest=CONFIG_DOCUMENTATION)
-
+                train_step(arch, celltype, background, seed, secondary=SECONDARY_TARGET, shuffle=i)
+                
 
 
 def main():

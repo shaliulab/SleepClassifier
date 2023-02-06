@@ -21,7 +21,6 @@ SHUFFLES = config["shuffles"]
 RAW=config["raw"]
 HIGHLY_VARIABLE_GENES=config["highly_variable_genes"]
 TEMPLATE_FILE=config["template"]
-TEMPLATE_FILE=config["template"]
 
 
 if TEMPLATE_FILE is None or not config["template_from_beginning"]:

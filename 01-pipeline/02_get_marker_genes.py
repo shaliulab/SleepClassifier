@@ -29,7 +29,6 @@ for background in config["background"]:
             output=output_folder,
             max_clusters=max_clusters_per_marker,
             thresholds=thresholds,
-            ncores=1,
             cache=cache,
             algorithm=algorithm,
         )

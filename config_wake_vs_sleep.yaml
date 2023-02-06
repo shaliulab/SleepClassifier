@@ -9,10 +9,10 @@ arch:
 background:
   KC:
   glia:
-batch_genes_file: batch_effects.xlsx
+# batch_genes_file: batch_effects.xlsx
 cache: false
 data_dir: data/
-exclude_genes_file: null
+exclude_genes_file: batch_effects.txt
 extensions:
 - png
 - svg

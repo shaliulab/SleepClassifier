@@ -23,6 +23,11 @@ HIGHLY_VARIABLE_GENES=config["highly_variable_genes"]
 TEMPLATE_FILE=config["template"]
 
 
+if config["exclude_genes_file"]:
+    EXCLUDE_GENES_FILE=os.path.join(DATA_DIR, config["exclude_genes_file"])
+else:
+    EXCLUDE_GENES_FILE=None
+
 if TEMPLATE_FILE is None or not config["template_from_beginning"]:
     template_file=None
 else:
@@ -46,7 +51,7 @@ for background in config["background"]:
         h5ad_output=os.path.join(TEMP_DATA_DIR, "h5ad", f"{background}.h5ad"),
         random_state=1500,
         background=os.path.join(DATA_DIR, "backgrounds", f"{background}.csv"),
-        batch_genes_file=os.path.join(DATA_DIR, config["batch_genes_file"]),
+        exclude_genes_file=EXCLUDE_GENES_FILE,
         shuffles=SHUFFLES,
         raw=RAW,
         highly_variable_genes=HIGHLY_VARIABLE_GENES,

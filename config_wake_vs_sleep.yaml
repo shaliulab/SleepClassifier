@@ -1,7 +1,7 @@
 DR_algorithm:
 - TruncatedSVD
-- UMAP
-- TSNE
+  #- UMAP
+  #- TSNE
 arch:
 - EBM
 - RF
@@ -77,15 +77,13 @@ plotting_kwargs:
   - 90
   - 0
   palette:  YlGnBu_r
-  #results_dir: 2022-08-04_results_wake_vs_sleep
-results_dir: 2022-09-15_results_wake_vs_sleep_copy
-#temp_data_dir: 2022-08-04_data_wake_vs_sleep
-temp_data_dir: 2022-07-23_data_wake_vs_sleep
+results_dir: 2023-02-06_results_wake_vs_sleep
+temp_data_dir: 2023-02-06_data_wake_vs_sleep
 seeds:
 - 1000
-- 2000
-- 3000
-- 4000
+  #- 2000
+  #- 3000
+  #- 4000
 shuffles: 1
 # target: Template
 target: Treatment
@@ -97,7 +95,8 @@ template_from_beginning: False
 user_defined_log2FC_threshold:
   KC: 2.0
   glia: 3.5
-secondary_target: [CellType, Run]
+  #secondary_target: [CellType, Run]
+secondary_target: null
 celltype: Cluster_ID_res8
 #celltype: Cluster_ID_res8
 predict: False
